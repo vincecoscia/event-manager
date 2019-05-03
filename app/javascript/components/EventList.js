@@ -25,11 +25,19 @@ class EventList extends React.Component {
           Events
         <Link to="/events/new">New Event</Link>
         </h2>
+
+        <input
+          className="search"
+          placeholder="Search"
+          type="text"
+          ref={this.searchInput}
+          onKeyUp={this.updateSearchTerm}
+        />
+
         <ul>{this.renderEvents()}</ul>
       </section>
     );
   }
-}
 
 EventList.propTypes = {
   activeId: PropTypes.number,
