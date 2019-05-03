@@ -1,15 +1,16 @@
+/* global window */
+
 import React from 'react';
 import axios from 'axios';
-import Header from './Header';
-import EventList from './EventList';
 import PropTypes from 'prop-types';
-import PropsRoute from './PropsRoute';
-import Event from './Event';
 import { Switch } from 'react-router-dom';
+import Event from './Event';
 import EventForm from './EventForm';
+import EventList from './EventList';
+import Header from './Header';
+import PropsRoute from './PropsRoute';
 import { success } from '../helpers/notifications';
 import { handleAjaxError } from '../helpers/helpers';
-
 
 class Editor extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class Editor extends React.Component {
     this.state = {
       events: null,
     };
+
     this.addEvent = this.addEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.updateEvent = this.updateEvent.bind(this);
@@ -52,7 +54,7 @@ class Editor extends React.Component {
         .delete(`/api/events/${eventId}.json`)
         .then((response) => {
           if (response.status === 204) {
-            success('Event deleted');
+            success('Event deleted successfully');
             const { history } = this.props;
             history.push('/events');
 
@@ -122,6 +124,5 @@ Editor.propTypes = {
 Editor.defaultProps = {
   match: undefined,
 };
-
 
 export default Editor;

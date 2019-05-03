@@ -1,21 +1,17 @@
 import { error } from './notifications';
 
-export const isEmptyObject = obj => Object.keys(obj).length === 0;
-
 const isValidDate = dateObj => !Number.isNaN(Date.parse(dateObj));
+
+export const isEmptyObject = obj => Object.keys(obj).length === 0;
 
 export const validateEvent = (event) => {
   const errors = {};
-
-  if (!isValidDate(event.event_date)) {
-    errors.event_date = 'You must enter a valid date';
-  }
 
   if (event.event_type === '') {
     errors.event_type = 'You must enter an event type';
   }
 
-  if (event.event_date === '') {
+  if (!isValidDate(event.event_date)) {
     errors.event_date = 'You must enter a valid date';
   }
 

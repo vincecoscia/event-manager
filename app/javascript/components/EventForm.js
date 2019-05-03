@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { formatDate, isEmptyObject, validateEvent } from '../helpers/helpers';
 import Pikaday from 'pikaday';
-import 'pikaday/css/pikaday.css';
 import { Link } from 'react-router-dom';
+import { formatDate, isEmptyObject, validateEvent } from '../helpers/helpers';
+import EventNotFound from './EventNotFound';
+import 'pikaday/css/pikaday.css';
 
 class EventForm extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class EventForm extends React.Component {
   }
 
   componentDidMount() {
+    /* eslint-disable no-new */
     new Pikaday({
       field: this.dateInput.current,
       toString: date => formatDate(date),
@@ -35,6 +37,15 @@ class EventForm extends React.Component {
     this.setState({ event });
   }
 
+  updateEvent(key, value) {
+    this.setState(prevState => ({
+      event: {
+        ...prevState.event,
+        [key]: value,
+      },
+    }));
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const { event } = this.state;
@@ -46,46 +57,6 @@ class EventForm extends React.Component {
       const { onSubmit } = this.props;
       onSubmit(event);
     }
-  }
-
-  validateEvent(event) {
-    const errors = {};
-
-    if (event.event_type === '') {
-      errors.event_type = 'You must enter an event type';
-    }
-
-    if (event.event_date === '') {
-      errors.event_date = 'You must enter a valid date';
-    }
-
-    if (event.title === '') {
-      errors.title = 'You must enter a title';
-    }
-
-    if (event.speaker === '') {
-      errors.speaker = 'You must enter at least one speaker';
-    }
-
-    if (event.host === '') {
-      errors.host = 'You must enter at least one host';
-    }
-
-    console.log(event);
-    return errors;
-  }
-
-  updateEvent(key, value) {
-    this.setState(prevState => ({
-      event: {
-        ...prevState.event,
-        [key]: value,
-      },
-    }));
-  }
-
-  isEmptyObject(obj) {
-    return Object.keys(obj).length === 0;
   }
 
   handleInputChange(event) {
@@ -116,6 +87,10 @@ class EventForm extends React.Component {
 
   render() {
     const { event } = this.state;
+    const { path } = this.props;
+
+    if (!event.id && path === '/events/:id/edit') return <EventNotFound />;
+
     const cancelURL = event.id ? `/events/${event.id}` : '/events';
     const title = event.id ? `${event.event_date} - ${event.event_type}` : 'New Event';
 
@@ -214,6 +189,7 @@ class EventForm extends React.Component {
 EventForm.propTypes = {
   event: PropTypes.shape(),
   onSubmit: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired,
 };
 
 EventForm.defaultProps = {
