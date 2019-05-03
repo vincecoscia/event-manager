@@ -7,5 +7,5 @@
 SQLite
 
 **Starting Up On LocalHost**
-rails db:reset
-rails s
+* rails db:reset
+* rails s
